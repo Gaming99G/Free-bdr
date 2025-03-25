@@ -1,33 +1,38 @@
-name: Avica
-
-on:
-
-workflow_dispatch:
-
-jobs:
-
-build:
-
-name: Start Building...
-
-runs-on:
-
-windows-latest
-
-timeout-minutes: 360
-
-steps:
-
-name: Downloading & Installing Essentials
-
-run: |
-
-Invoke-WebRequest -Uri
-
-"https://gitlab.com/raposabrty/pcrdp/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
-
-cmd /c Downloads.bat
-
-name: Show Website
-
-run: cmd /c show.bat
+diskpart
+list disk
+select disk 1  ; USB'nizin disk numarasını seçin (örneğin Disk 1)
+clean
+create partition primary
+format fs=ntfs quick
+active
+assign
+exit
+xcopy E:\* F:\ /E /F /H  ; E: ISO'nun bağlı olduğu sürücü, F: USB'nizin sürücü harfi<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <settings pass="windowsPE">
+        <component name="Microsoft-Windows-Setup" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+            <UserData>
+                <ProductKey>
+                    <Key>XXXXX-XXXXX-XXXXX-XXXXX-XXXXX</Key>  ; Buraya lisans anahtarınızı yazın
+                </ProductKey>
+                <AcceptEula>true</AcceptEula>
+                <FullName>Kullanıcı Adı</FullName>
+                <Organization>Şirket Adı</Organization>
+            </UserData>
+            <ImageInstall>
+                <OSImage>
+                    <InstallFrom>
+                        <MetaData wcm:action="add">
+                            <Key>/Image/Name</Key>
+                            <Value>Windows 10 Pro</Value>  ; Hangi Windows sürümünü kurmak istediğinizi belirtin
+                        </MetaData>
+                    </InstallFrom>
+                    <InstallTo>
+                        <DiskID>0</DiskID>  ; Kurulum yapılacak diski belirtin
+                        <PartitionID>1</PartitionID>  ; Kurulum yapılacak bölümü belirtin
+                    </InstallTo>
+                </OSImage>
+            </ImageInstall>
+        </component>
+    </settings>
+</unattend>
